@@ -1,0 +1,6 @@
+mta_archives/
+node_modules/
+resources/
+app/node_modules
+app/build
+package-lock.json

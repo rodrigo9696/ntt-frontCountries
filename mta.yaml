@@ -1,0 +1,76 @@
+_schema-version: "3.2"
+ID: front-countries
+version: 0.0.1
+parameters:
+  enable-parallel-deployments: true
+  deploy_mode: html5-repo
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - npm --prefix ./app install ./app
+        - npm run build --prefix ./app
+modules:
+  # --------------------- HTML5DEPLOYER MODULE -----------------    
+  - name: front-countries_ui_deployer
+  # ------------------------------------------------------------
+    type: com.sap.html5.application-content
+    path: html5Deployer
+    requires:
+      - name: front-countries_html_repo_host
+    build-parameters:
+      requires:
+        - name: countriesModule
+          artifacts:
+            - './*'
+          target-path: resources/app
+  # --------------------- REACT APP MODULE ---------------------
+  - name: countriesModule
+  # ------------------------------------------------------------
+    type: html5
+    path: app
+    build-parameters:
+      supported-platforms: []
+      build-result: build  
+  # --------------------- APPROUTER MODULE ---------------------
+  - name: countries-approuter
+  # ------------------------------------------------------------
+    type: approuter.nodejs
+    path: approuter
+    requires:
+      - name: front-countries_html5_repo_runtime
+      - name: back-countries-auth
+      - name: destinations-countries
+resources:
+  # --------------------- XSUAA Service ---------------------
+  - name: back-countries-auth
+  # ----------------------------------------------------------
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: xsuaa
+      service-plan: application
+
+  - name: destinations-countries
+  # ----------------------------------------------------------
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: destination
+      service-plan: lite
+
+  # --------------------- HTML5 Runtime ----------------------
+  - name: front-countries_html5_repo_runtime
+  # ----------------------------------------------------------
+    parameters:
+      service-name: front-countries_html5_repo_runtime
+      service-plan: app-runtime
+      service: html5-apps-repo
+    type: org.cloudfoundry.managed-service
+
+  # --------------------- HTML5 Host -------------------------
+  - name: front-countries_html_repo_host
+  # ----------------------------------------------------------
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-name: front-countries-html5-app-host-service
+      service-plan: app-host
