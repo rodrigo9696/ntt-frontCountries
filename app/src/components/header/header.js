@@ -7,7 +7,6 @@ import { useSelector } from "react-redux";
 import { ModalSelectTheme } from "./components/modal-theme/modal-theme";
 
 export const Header = () => {
-    const { isLogged } = useSelector(rootReducer => rootReducer.loginReducer);
     const uidSelectThemeModal = "modal-select-theme";
 
     const openModalSelectTheme = () => {
@@ -20,7 +19,7 @@ export const Header = () => {
             <div className="container header-container">
                 <img src={logoSAP} alt="" className="logo-sap"/>
 
-                {isLogged && (
+                {(
                     <Button className="btn-change-theme" icon="customize" design="Emphasized" onClick={openModalSelectTheme}>Change Theme</Button>
                 )}
 
