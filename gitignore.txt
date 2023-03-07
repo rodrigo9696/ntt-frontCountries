@@ -1,5 +1,0 @@
-mta_archives/
-node_modules/
-resources/
-countriesModule/node_modules
-countriesModule/build
